@@ -1,2 +1,3 @@
-# daily-expense-tracker-with-editable-entries-custom-types-and-daily-totals
-Exported from Caffeine project: Add multi-year (all years to current year) expense total with auto-updating UI
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

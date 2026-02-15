@@ -1,0 +1,38 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T08:00:19.761Z",
+  "summary": "Frontend adds query key, hook, and mutation invalidations for an all-years total, and DailyExpensesPage wires the hook. However, the diff does not show the required new backend query method, and the UI rendering of the new total card is not evidenced in the provided truncation.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "Add a new public backend query method that returns a single multi-year expense total computed as the sum of all expense.amount values from the earliest recorded expense year through the current canister time (Time.now).",
+      "reason": "backend/main.mo is truncated and does not include any visible addition of a new public query method (e.g., getAllYearsTotalToNow) nor logic to compute a multi-year total from earliest expense year through Time.now. The frontend hook calls actor.getAllYearsTotalToNow(), but the backend method implementation is not evidenced in the diff summary.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with existing total cards.",
+      "reason": "DailyExpensesPage.tsx is truncated before the totals card rendering section; while it imports useAllYearsTotalToNow and computes displayAllYearsTotal/allYearsLoading, the diff summary does not provide direct evidence that an additional total card with label and loading indicator is rendered.",
+      "evidence": [
+        "frontend/src/pages/DailyExpensesPage.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.62,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/features/expenses/queryKeys.ts",
+    "frontend/src/features/expenses/useAllYearsTotalToNow.ts",
+    "frontend/src/features/expenses/useCreateExpense.ts",
+    "frontend/src/features/expenses/useDeleteExpense.ts",
+    "frontend/src/features/expenses/useUpdateExpense.ts",
+    "frontend/src/pages/DailyExpensesPage.tsx",
+    "project_state.json"
+  ]
+}

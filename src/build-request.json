@@ -1,0 +1,119 @@
+{
+  "kind": "build_request",
+  "title": "Add multi-year (all years to current year) expense total with auto-updating UI",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Add a new public backend query method that returns a single multi-year expense total computed as the sum of all expense.amount values from the earliest recorded expense year through the current canister time (Time.now), i.e., a single “till date/current year” total across all years.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-3",
+          "msg-5",
+          "msg-7",
+          "msg-9"
+        ],
+        "quotes": [
+          "Add another for multi year expenses till date",
+          "sum of all years till current year",
+          "take the year till current date data",
+          "Yes,proceed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes a new query method for the multi-year total (name to be consistent with existing getMonthlyTotalToNow/getYearlyTotalToNow style).",
+        "The method returns a Nat total that equals the sum of all stored expense amounts within the intended multi-year range (earliest year of stored data through Time.now).",
+        "The method is callable without authentication, consistent with existing public expense query APIs.",
+        "No state migration is introduced unless strictly necessary (this feature should be derivable from existing stored expenses)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add a new React Query hook and query key to fetch and cache the new backend multi-year total, following the same patterns used by useMonthlyTotalToNow and useYearlyTotalToNow (anonymous actor, enabled gating on actor readiness, no retries).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3",
+          "msg-5",
+          "msg-7",
+          "msg-9"
+        ],
+        "quotes": [
+          "mulit year auto calculation same as the yearly one which auto update",
+          "auto update",
+          "single",
+          "Yes,proceed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new query key is added to frontend/src/features/expenses/queryKeys.ts for the multi-year total.",
+        "A new hook is added alongside existing totals hooks (e.g., in frontend/src/features/expenses/) that calls the new backend query method and returns {data,isLoading,...} consistent with existing totals hooks.",
+        "The hook caches results via React Query and supports refetch/invalidation like other totals."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with the existing daily/month-to-date/year-to-date cards.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3",
+          "msg-5",
+          "msg-7",
+          "msg-9"
+        ],
+        "quotes": [
+          "Add another for multi year expenses till date",
+          "single",
+          "Yes,proceed"
+        ]
+      },
+      "acceptanceCriteria": [
+        "DailyExpensesPage renders an additional total card for the multi-year total using the same formatting as other totals ($ with cents from bigint/100).",
+        "The card label is in English and clearly indicates it is the multi-year/till-date total (e.g., “Multi-year Total (to date)”).",
+        "When the multi-year total is loading, the card shows the same loading indicator pattern used by the other total cards.",
+        "Layout remains responsive (works on mobile and desktop) when adding the extra total card."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Ensure the multi-year total auto-updates after creating, updating, or deleting an expense by invalidating the multi-year total query in the existing expense mutation hooks.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3",
+          "msg-4",
+          "msg-5",
+          "msg-7"
+        ],
+        "quotes": [
+          "mulit year auto calculation same as the yearly one which auto update",
+          "auto update",
+          "take the year till current date data",
+          "single"
+        ]
+      },
+      "acceptanceCriteria": [
+        "frontend/src/features/expenses/useCreateExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
+        "frontend/src/features/expenses/useUpdateExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
+        "frontend/src/features/expenses/useDeleteExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
+        "After any create/update/delete, the displayed multi-year total refreshes without a page reload."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single-actor Motoko canister; add logic only within backend/main.mo unless a state migration is truly required.",
+    "Do not edit frontend files under the immutablePaths list (compose existing UI components instead).",
+    "Use English for any user-facing text."
+  ],
+  "nonGoals": [
+    "Adding per-year breakdowns or a multi-year table/list; only a single combined multi-year total is required.",
+    "Adding manual date-range pickers or user-selected multi-year ranges.",
+    "Adding authentication changes; expense totals remain available via the anonymous actor as implemented."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

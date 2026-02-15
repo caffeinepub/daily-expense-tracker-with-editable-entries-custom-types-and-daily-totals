@@ -1,0 +1,82 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T08:00:19.763Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Add a new public backend query method that returns a single multi-year expense total computed as the sum of all expense.amount values from the earliest recorded expense year through the current canister time (Time.now), i.e., a single “till date/current year” total across all years.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Add a new React Query hook and query key to fetch and cache the new backend multi-year total, following the same patterns used by useMonthlyTotalToNow and useYearlyTotalToNow (anonymous actor, enabled gating on actor readiness, no retries).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/expenses/queryKeys.ts",
+          "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/expenses/queryKeys.ts",
+          "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with the existing daily/month-to-date/year-to-date cards.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DailyExpensesPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DailyExpensesPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Ensure the multi-year total auto-updates after creating, updating, or deleting an expense by invalidating the multi-year total query in the existing expense mutation hooks.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/expenses/useCreateExpense.ts",
+          "frontend/src/features/expenses/useUpdateExpense.ts",
+          "frontend/src/features/expenses/useDeleteExpense.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/expenses/useCreateExpense.ts",
+          "frontend/src/features/expenses/useUpdateExpense.ts",
+          "frontend/src/features/expenses/useDeleteExpense.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/features/expenses/queryKeys.ts",
+    "frontend/src/features/expenses/useAllYearsTotalToNow.ts",
+    "frontend/src/features/expenses/useCreateExpense.ts",
+    "frontend/src/features/expenses/useDeleteExpense.ts",
+    "frontend/src/features/expenses/useUpdateExpense.ts",
+    "frontend/src/pages/DailyExpensesPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Multi-year (all-years-to-date) expense total: React Query hook + UI card + auto-refresh",
+  "requirements": [
+    {
+      "id": "REQ-2",
+      "summary": "Add a React Query query key and hook to fetch/cache the backend multi-year total using the anonymous actor with the same gating and retry behavior as existing total hooks.",
+      "acceptanceCriteria": [
+        "A new query key is added to frontend/src/features/expenses/queryKeys.ts for the multi-year total.",
+        "A new hook is added alongside existing totals hooks (e.g., in frontend/src/features/expenses/) that calls the new backend query method and returns {data,isLoading,...} consistent with existing totals hooks.",
+        "The hook caches results via React Query and supports refetch/invalidation like other totals."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/expenses/queryKeys.ts",
+          "operation": "modify",
+          "description": "Add a new expenseQueryKeys helper for the multi-year total (e.g., allYearsTotalToNow) to match existing monthlyTotalToNow/yearlyTotalToNow key patterns."
+        },
+        {
+          "path": "frontend/src/features/expenses/useAllYearsTotalToNow.ts",
+          "operation": "create",
+          "description": "Create a new React Query hook (pattern-matched to useMonthlyTotalToNow/useYearlyTotalToNow) that uses useAnonymousActor readiness gating and calls actor.getAllYearsTotalToNow(), with retry disabled and isLoading combining actorFetching + query.isLoading."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Show the multi-year total on Daily Expenses as an additional responsive total card with English label and existing loading spinner pattern.",
+      "acceptanceCriteria": [
+        "DailyExpensesPage renders an additional total card for the multi-year total using the same formatting as other totals ($ with cents from bigint/100).",
+        "The card label is in English and clearly indicates it is the multi-year/till-date total (e.g., “Multi-year Total (to date)”).",
+        "When the multi-year total is loading, the card shows the same loading indicator pattern used by the other total cards.",
+        "Layout remains responsive (works on mobile and desktop) when adding the extra total card."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DailyExpensesPage.tsx",
+          "operation": "modify",
+          "description": "Import and use the new useAllYearsTotalToNow hook; compute a displayAllYearsTotal fallback (BigInt(0)) and render a new total Card in the totals grid with an English label (e.g., \"Multi-year Total (to date):\") and the same Loader2 spinner while loading; update the grid column classes to remain responsive with the extra card (e.g., md grid supports 4 cards)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Auto-update the multi-year total after expense create/update/delete by invalidating the new React Query key from existing mutation hooks.",
+      "acceptanceCriteria": [
+        "frontend/src/features/expenses/useCreateExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
+        "frontend/src/features/expenses/useUpdateExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
+        "frontend/src/features/expenses/useDeleteExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
+        "After any create/update/delete, the displayed multi-year total refreshes without a page reload."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/expenses/useCreateExpense.ts",
+          "operation": "modify",
+          "description": "On mutation success, invalidate the new multi-year total query key (e.g., expenseQueryKeys.allYearsTotalToNow()) alongside the existing daily/monthly/yearly invalidations so the UI refreshes automatically."
+        },
+        {
+          "path": "frontend/src/features/expenses/useUpdateExpense.ts",
+          "operation": "modify",
+          "description": "On mutation success, invalidate the new multi-year total query key (e.g., expenseQueryKeys.allYearsTotalToNow()) alongside the existing daily/monthly/yearly invalidations so the UI refreshes automatically."
+        },
+        {
+          "path": "frontend/src/features/expenses/useDeleteExpense.ts",
+          "operation": "modify",
+          "description": "On mutation success, invalidate the new multi-year total query key (e.g., expenseQueryKeys.allYearsTotalToNow()) alongside the existing daily/monthly/yearly invalidations so the UI refreshes automatically."
+        }
+      ]
+    }
+  ]
+}

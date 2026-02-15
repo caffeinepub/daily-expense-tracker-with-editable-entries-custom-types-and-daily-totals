@@ -1,0 +1,65 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-a-new-react-query-hook-and-query-key-to-fetch-and-cache-the-new-backend-multi-year-total-following-the-same-patterns-used-by-usemonthlytotaltonow-and-useyearlytotaltonow-anonymous-actor-enabled-gating-on-actor-readiness-no-retries",
+      "featureTitle": "Add a new React Query hook and query key to fetch and cache the new backend multi-year total, following the same patterns used by useMonthlyTotalToNow and useYearlyTotalToNow (anonymous actor, enabled gating on actor readiness, no retries).",
+      "files": [
+        "frontend/src/features/expenses/queryKeys.ts",
+        "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-daily-expenses-page-totals-ui-to-display-the-multi-year-total-as-a-single-additional-total-card-with-an-english-label-and-show-a-loading-spinner-while-it-is-fetching-consistent-with-the-existing-daily-month-to-date-year-to-date-cards",
+      "featureTitle": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with the existing daily/month-to-date/year-to-date cards.",
+      "files": [
+        "frontend/src/pages/DailyExpensesPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-multi-year-total-auto-updates-after-creating-updating-or-deleting-an-expense-by-invalidating-the-multi-year-total-query-in-the-existing-expense-mutation-hooks",
+      "featureTitle": "Ensure the multi-year total auto-updates after creating, updating, or deleting an expense by invalidating the multi-year total query in the existing expense mutation hooks.",
+      "files": [
+        "frontend/src/features/expenses/useCreateExpense.ts",
+        "frontend/src/features/expenses/useDeleteExpense.ts",
+        "frontend/src/features/expenses/useUpdateExpense.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
