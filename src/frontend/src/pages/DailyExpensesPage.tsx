@@ -8,12 +8,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon, Plus, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import ExpenseListItem from '../components/expenses/ExpenseListItem';
+import ExpandableDetailsSection from '../components/expenses/ExpandableDetailsSection';
 import { useExpensesForDay } from '../features/expenses/useExpensesForDay';
 import { useCreateExpense } from '../features/expenses/useCreateExpense';
 import { useDailyTotal } from '../features/expenses/useDailyTotal';
 import { useMonthlyTotalToNow } from '../features/expenses/useMonthlyTotalToNow';
 import { useYearlyTotalToNow } from '../features/expenses/useYearlyTotalToNow';
 import { useAllYearsTotalToNow } from '../features/expenses/useAllYearsTotalToNow';
+import { useAllExpenses } from '../features/expenses/useAllExpenses';
 import { dateToStartOfDayTime } from '../features/expenses/date';
 import { toast } from 'sonner';
 
@@ -30,6 +32,7 @@ export default function DailyExpensesPage() {
   const { data: monthlyTotal, isLoading: monthlyLoading } = useMonthlyTotalToNow();
   const { data: yearlyTotal, isLoading: yearlyLoading } = useYearlyTotalToNow();
   const { data: allYearsTotal, isLoading: allYearsLoading } = useAllYearsTotalToNow();
+  const { data: allExpenses = [] } = useAllExpenses();
   const createExpenseMutation = useCreateExpense(selectedDayTime);
 
   const handleAddExpense = () => {
@@ -75,6 +78,15 @@ export default function DailyExpensesPage() {
   const displayMonthlyTotal = monthlyTotal ?? BigInt(0);
   const displayYearlyTotal = yearlyTotal ?? BigInt(0);
   const displayAllYearsTotal = allYearsTotal ?? BigInt(0);
+
+  // Calculate date ranges for details sections
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  
+  const monthStartTime = dateToStartOfDayTime(startOfMonth);
+  const yearStartTime = dateToStartOfDayTime(startOfYear);
+  const nowTime = dateToStartOfDayTime(now);
 
   return (
     <div className="container max-w-4xl mx-auto py-8 px-4">
@@ -241,6 +253,29 @@ export default function DailyExpensesPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Expandable Details Sections */}
+        <Card className="border-2 shadow-ledger">
+          <CardHeader>
+            <CardTitle className="text-xl">Period Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ExpandableDetailsSection
+              label="Monthly Details"
+              startDate={monthStartTime}
+              endDate={nowTime}
+            />
+            <ExpandableDetailsSection
+              label="Yearly Details"
+              startDate={yearStartTime}
+              endDate={nowTime}
+            />
+            <ExpandableDetailsSection
+              label="Multi-yearly Details"
+              expenses={allExpenses}
+            />
+          </CardContent>
+        </Card>
 
         {/* Expenses List */}
         <Card className="border-2 shadow-ledger">

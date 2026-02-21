@@ -1,37 +1,67 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T08:00:19.761Z",
-  "summary": "Frontend adds query key, hook, and mutation invalidations for an all-years total, and DailyExpensesPage wires the hook. However, the diff does not show the required new backend query method, and the UI rendering of the new total card is not evidenced in the provided truncation.",
+  "generatedAt": "2026-02-21T09:15:43.585Z",
+  "summary": "The implementation successfully adds expandable details sections below each time period summary (monthly, yearly, multi-yearly) with independent expand/collapse states. Backend support for date-range queries and all-expenses queries has been added. However, the expense details table is missing the 'description' column that was explicitly required in the acceptance criteria.",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "Add a new public backend query method that returns a single multi-year expense total computed as the sum of all expense.amount values from the earliest recorded expense year through the current canister time (Time.now).",
-      "reason": "backend/main.mo is truncated and does not include any visible addition of a new public query method (e.g., getAllYearsTotalToNow) nor logic to compute a multi-year total from earliest expense year through Time.now. The frontend hook calls actor.getAllYearsTotalToNow(), but the backend method implementation is not evidenced in the diff summary.",
+      "requirement": "The table displays date, category, amount, and description columns for each expense",
+      "reason": "The ExpenseDetailsTable component only displays Date, Category (expenseType), Submitter, and Amount columns. The required 'description' column is missing.",
       "evidence": [
-        "backend/main.mo",
-        "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+        "frontend/src/components/expenses/ExpenseDetailsTable.tsx"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "The table displays date, category, amount, and description columns for each expense",
+      "reason": "The ExpenseDetailsTable component only displays Date, Category (expenseType), Submitter, and Amount columns. The required 'description' column is missing.",
+      "evidence": [
+        "frontend/src/components/expenses/ExpenseDetailsTable.tsx"
       ]
     },
     {
       "id": "REQ-3",
-      "requirement": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with existing total cards.",
-      "reason": "DailyExpensesPage.tsx is truncated before the totals card rendering section; while it imports useAllYearsTotalToNow and computes displayAllYearsTotal/allYearsLoading, the diff summary does not provide direct evidence that an additional total card with label and loading indicator is rendered.",
+      "requirement": "The table displays date, category, amount, and description columns for each expense",
+      "reason": "The ExpenseDetailsTable component only displays Date, Category (expenseType), Submitter, and Amount columns. The required 'description' column is missing.",
       "evidence": [
-        "frontend/src/pages/DailyExpensesPage.tsx"
+        "frontend/src/components/expenses/ExpenseDetailsTable.tsx"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Method returns expenses with all fields: id, date, category, amount, description",
+      "reason": "The backend Expense type definition visible in the truncated main.mo file does not include a 'description' field. The type shows: submitterName, expenseType, amount, date, createdAt, updatedAt, but no description field.",
+      "evidence": [
+        "backend/main.mo"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.62,
+  "hallucinated_features": [
+    {
+      "description": "Added 'Submitter' column in the expense details table",
+      "reason": "The requirements specified displaying 'date, category, amount, and description' columns only. A 'Submitter' column (showing submitterName) was added but was not requested in any requirement.",
+      "evidence": [
+        "frontend/src/components/expenses/ExpenseDetailsTable.tsx"
+      ]
+    },
+    {
+      "description": "Sorting expenses by date (most recent first) in details table",
+      "reason": "The non-goals explicitly state 'Adding filters or sorting options to the details tables' should not be implemented. The ExpenseDetailsTable sorts expenses by date descending.",
+      "evidence": [
+        "frontend/src/components/expenses/ExpenseDetailsTable.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.85,
   "changed_files": [
     "backend/main.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+    "frontend/src/components/expenses/ExpenseDetailsTable.tsx",
     "frontend/src/features/expenses/queryKeys.ts",
-    "frontend/src/features/expenses/useAllYearsTotalToNow.ts",
-    "frontend/src/features/expenses/useCreateExpense.ts",
-    "frontend/src/features/expenses/useDeleteExpense.ts",
-    "frontend/src/features/expenses/useUpdateExpense.ts",
+    "frontend/src/features/expenses/useAllExpenses.ts",
+    "frontend/src/features/expenses/useExpensesInRange.ts",
     "frontend/src/pages/DailyExpensesPage.tsx",
     "project_state.json"
   ]

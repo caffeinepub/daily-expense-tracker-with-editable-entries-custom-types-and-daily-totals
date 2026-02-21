@@ -1,6 +1,6 @@
 {
   "frontend/src/App.tsx": "Main application component that wraps the app with ThemeProvider and renders the AppLayout with DailyExpensesPage and Toaster for notifications.",
-  "frontend/src/pages/DailyExpensesPage.tsx": "Primary page component that displays date selector, expense creation form, four total cards (daily, month-to-date, year-to-date, and multi-year total to date) with loading states and automatic updates, and expense list without authentication requirements for public access.",
+  "frontend/src/pages/DailyExpensesPage.tsx": "Primary page component that displays date selector, expense creation form, four total cards with expandable details sections below each period summary (monthly, yearly, multi-yearly), and daily expense list with authentication requirements.",
   "frontend/src/components/expenses/ExpenseListItem.tsx": "Reusable component for displaying individual expense items with submitter name, inline editing for all fields including name, validation, save/cancel controls, and delete functionality.",
   "frontend/src/components/layout/AppLayout.tsx": "Layout wrapper component providing header with branding and neutral tagline, main content area, and footer with heart icon and caffeine.ai attribution, styled with ledger theme borders and shadows.",
   "frontend/src/components/auth/LoginButton.tsx": "Authentication button component that handles Internet Identity login/logout with loading states and query cache clearing.",
@@ -17,8 +17,12 @@
   "frontend/index.html": "HTML entry point with favicon reference to generated asset and proper meta tags.",
   "frontend/tailwind.config.js": "Tailwind configuration extending the theme with OKLCH color tokens and enhanced ledger-style shadow utilities for a cohesive paper-ledger aesthetic.",
   "frontend/src/hooks/useAnonymousActor.ts": "Hook that creates and returns an anonymous backend actor without requiring Internet Identity authentication, providing a compatible interface for React Query consumers.",
-  "frontend/src/features/expenses/queryKeys.ts": "Centralized React Query key helpers for expense-related queries including daily, monthly, yearly, and all-years totals, ensuring consistent caching and invalidation across hooks and mutations.",
+  "frontend/src/features/expenses/queryKeys.ts": "Centralized React Query key helpers for expense-related queries including daily, monthly, yearly, all-years totals, expenses in date range, and all expenses, ensuring consistent caching and invalidation.",
   "frontend/src/features/expenses/useMonthlyTotalToNow.ts": "React Query hook that fetches and caches the backend monthly total-to-now value via the anonymous actor with enabled/loading behavior consistent with useDailyTotal.",
   "frontend/src/features/expenses/useYearlyTotalToNow.ts": "React Query hook that fetches and caches the backend yearly total-to-now value via the anonymous actor with enabled/loading behavior consistent with useDailyTotal.",
-  "frontend/src/features/expenses/useAllYearsTotalToNow.ts": "React Query hook that fetches and caches the backend all-years total-to-now value via the anonymous actor with enabled/loading behavior consistent with other total hooks."
+  "frontend/src/features/expenses/useAllYearsTotalToNow.ts": "React Query hook that fetches and caches the backend all-years total-to-now value via the anonymous actor with enabled/loading behavior consistent with other total hooks.",
+  "frontend/src/features/expenses/useExpensesInRange.ts": "React Query hook that fetches expenses within a specified date range using the anonymous actor and backend getExpensesInRange method.",
+  "frontend/src/features/expenses/useAllExpenses.ts": "React Query hook that fetches all expenses using the anonymous actor and backend getAllExpenses method for multi-yearly details display.",
+  "frontend/src/components/expenses/ExpenseDetailsTable.tsx": "Reusable table component that displays expense details with columns for date, category, submitter name, and amount, sorted by date with proper formatting and empty state handling.",
+  "frontend/src/components/expenses/ExpandableDetailsSection.tsx": "Collapsible section component with a Details button that toggles visibility of ExpenseDetailsTable, supporting both date-range mode and all-expenses mode with independent expand/collapse state."
 }

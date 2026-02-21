@@ -45,6 +45,10 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getDailyTotal(date: Time): Promise<bigint>;
     /**
+     * / Returns all expenses within a specified date range (inclusive).
+     */
+    getExpensesInRange(startDate: Time, endDate: Time): Promise<Array<Expense>>;
+    /**
      * / Returns the total expense amount for the current month up to now.
      */
     getMonthlyTotalToNow(): Promise<bigint>;

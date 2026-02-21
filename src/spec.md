@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add a single “multi-year to date” expense total (from earliest recorded expense year through the current canister time) and display it on the Daily Expenses page with auto-updating behavior.
+**Goal:** Add expandable details tables to monthly, yearly, and multi-yearly summary sections showing all expenses for each time period.
 
 **Planned changes:**
-- Backend: add a new public query method that returns a Nat multi-year total summing all stored expense.amount values from the earliest stored expense year through Time.now.
-- Frontend: add a React Query key and hook to fetch/cache the new multi-year total (following existing monthly/yearly total hook patterns).
-- Frontend UI: add an additional total card on the Daily Expenses page labeled in English (e.g., “Multi-year Total (to date)”), with the same loading indicator and formatting as other total cards.
-- Frontend mutations: invalidate the multi-year total query after create/update/delete expense actions so the displayed value refreshes without reloading.
+- Add a "Details" button below each time period summary (monthly, yearly, multi-yearly)
+- Implement inline expandable tables that display all expenses with date, category, amount, and description columns
+- Each details section can be expanded/collapsed independently with toggle functionality
+- Create backend query method to fetch expenses within specified date ranges
 
-**User-visible outcome:** The Daily Expenses page shows a new “multi-year total (to date)” card that loads with a spinner and automatically updates after expenses are created, updated, or deleted.
+**User-visible outcome:** Users can click "Details" buttons below each time period summary to view a complete table of all expenses for that period, with each section expanding and collapsing independently.

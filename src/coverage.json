@@ -1,78 +1,99 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T08:00:19.763Z",
+  "generatedAt": "2026-02-21T09:15:43.588Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 3,
+    "total": 5,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a new public backend query method that returns a single multi-year expense total computed as the sum of all expense.amount values from the earliest recorded expense year through the current canister time (Time.now), i.e., a single “till date/current year” total across all years.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Add a 'Details' button below the monthly summary section that, when clicked, expands inline to display a table of all daily expenses for the current month to date",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/expenses/useExpensesInRange.ts",
+          "frontend/src/components/expenses/ExpenseDetailsTable.tsx",
+          "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+          "frontend/src/pages/DailyExpensesPage.tsx",
+          "frontend/src/features/expenses/queryKeys.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/expenses/useExpensesInRange.ts",
+          "frontend/src/components/expenses/ExpenseDetailsTable.tsx",
+          "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+          "frontend/src/pages/DailyExpensesPage.tsx",
+          "frontend/src/features/expenses/queryKeys.ts"
+        ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add a new React Query hook and query key to fetch and cache the new backend multi-year total, following the same patterns used by useMonthlyTotalToNow and useYearlyTotalToNow (anonymous actor, enabled gating on actor readiness, no retries).",
+        "summary": "Add a 'Details' button below the yearly summary section that, when clicked, expands inline to display a table of all daily expenses for the current year to date",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/expenses/queryKeys.ts",
-          "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+          "frontend/src/pages/DailyExpensesPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/expenses/queryKeys.ts",
-          "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+          "frontend/src/pages/DailyExpensesPage.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with the existing daily/month-to-date/year-to-date cards.",
+        "summary": "Add a 'Details' button below the multi-yearly summary section that, when clicked, expands inline to display a table of all daily expenses across all years",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/DailyExpensesPage.tsx"
+          "frontend/src/features/expenses/useAllExpenses.ts",
+          "frontend/src/pages/DailyExpensesPage.tsx",
+          "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+          "frontend/src/features/expenses/queryKeys.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DailyExpensesPage.tsx"
+          "frontend/src/features/expenses/useAllExpenses.ts",
+          "frontend/src/pages/DailyExpensesPage.tsx",
+          "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+          "frontend/src/features/expenses/queryKeys.ts"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Ensure the multi-year total auto-updates after creating, updating, or deleting an expense by invalidating the multi-year total query in the existing expense mutation hooks.",
+        "summary": "Ensure each time period's details section can be expanded and collapsed independently without affecting the other sections",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/expenses/useCreateExpense.ts",
-          "frontend/src/features/expenses/useUpdateExpense.ts",
-          "frontend/src/features/expenses/useDeleteExpense.ts"
+          "frontend/src/components/expenses/ExpandableDetailsSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/expenses/useCreateExpense.ts",
-          "frontend/src/features/expenses/useUpdateExpense.ts",
-          "frontend/src/features/expenses/useDeleteExpense.ts"
+          "frontend/src/components/expenses/ExpandableDetailsSection.tsx"
         ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Create a backend query method to fetch all expenses within a specified date range to support the monthly and yearly detail views",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
+    "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+    "frontend/src/components/expenses/ExpenseDetailsTable.tsx",
+    "frontend/src/config.ts",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/features/expenses/queryKeys.ts",
-    "frontend/src/features/expenses/useAllYearsTotalToNow.ts",
-    "frontend/src/features/expenses/useCreateExpense.ts",
-    "frontend/src/features/expenses/useDeleteExpense.ts",
-    "frontend/src/features/expenses/useUpdateExpense.ts",
+    "frontend/src/features/expenses/useAllExpenses.ts",
+    "frontend/src/features/expenses/useExpensesInRange.ts",
     "frontend/src/pages/DailyExpensesPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",

@@ -1,32 +1,42 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Expense tracker app with auto-calculated yearly totals and a new multi-year (till current year) total derived from yearly expense data.",
+  "summary": "Expense tracker app with monthly, yearly, and multi-yearly views. Now adding expandable details tables for each time period to show all daily expenses inline.",
   "architectural_notes": [
-    "Multi-year 'till-date' total should be derived from existing yearly expense data (no separate multi-year inputs) and auto-recalculate on changes."
+    "App uses two canisters: backend (stores expense data) and frontend (serves website)",
+    "Expense data stored in canister stable memory on Internet Computer",
+    "Data persists unless canister runs out of cycles or data is manually deleted"
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-new-react-query-hook-and-query-key-to-fetch-and-cache-the-new-backend-multi-year-total-following-the-same-patterns-used-by-usemonthlytotaltonow-and-useyearlytotaltonow-anonymous-actor-enabled-gating-on-actor-readiness-no-retries",
-      "title": "Add a new React Query hook and query key to fetch and cache the new backend multi-year total, following the same patterns used by useMonthlyTotalToNow and useYearlyTotalToNow (anonymous actor, enabled gating on actor readiness, no retries).",
+      "id": "feature-add-a-details-button-below-the-monthly-summary-section-that-when-clicked-expands-inline-to-display-a-table-of-all-daily-expenses-for-the-current-month-to-date",
+      "title": "Add a 'Details' button below the monthly summary section that, when clicked, expands inline to display a table of all daily expenses for the current month to date",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-details-button-below-the-yearly-summary-section-that-when-clicked-expands-inline-to-display-a-table-of-all-daily-expenses-for-the-current-year-to-date",
+      "title": "Add a 'Details' button below the yearly summary section that, when clicked, expands inline to display a table of all daily expenses for the current year to date",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-daily-expenses-page-totals-ui-to-display-the-multi-year-total-as-a-single-additional-total-card-with-an-english-label-and-show-a-loading-spinner-while-it-is-fetching-consistent-with-the-existing-daily-month-to-date-year-to-date-cards",
-      "title": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with the existing daily/month-to-date/year-to-date cards.",
+      "id": "feature-add-a-details-button-below-the-multi-yearly-summary-section-that-when-clicked-expands-inline-to-display-a-table-of-all-daily-expenses-across-all-years",
+      "title": "Add a 'Details' button below the multi-yearly summary section that, when clicked, expands inline to display a table of all daily expenses across all years",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-multi-year-total-auto-updates-after-creating-updating-or-deleting-an-expense-by-invalidating-the-multi-year-total-query-in-the-existing-expense-mutation-hooks",
-      "title": "Ensure the multi-year total auto-updates after creating, updating, or deleting an expense by invalidating the multi-year total query in the existing expense mutation hooks.",
+      "id": "feature-ensure-each-time-period-s-details-section-can-be-expanded-and-collapsed-independently-without-affecting-the-other-sections",
+      "title": "Ensure each time period's details section can be expanded and collapsed independently without affecting the other sections",
       "reqIds": [
         "REQ-4"
       ],
@@ -36,20 +46,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add multi-year expenses till-date auto-calculation: compute a single total as the sum of all yearly expense data from the starting year through the current year, auto-updating like the yearly totals.",
+      "summary": "Add Details button below monthly, yearly, and multi-yearly summaries that expands inline to show table of all daily expenses",
       "reqIds": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
-      "id": "AR-2",
-      "summary": "Add a new public backend query method that returns a single multi-year expense total computed as the sum of all expense.amount values from the earliest recorded expense year through the current canister time (Time.now), i.e., a single “till date/current year” total across all years.",
+      "id": "AR-6",
+      "summary": "Create a backend query method to fetch all expenses within a specified date range to support the monthly and yearly detail views",
       "reqIds": [
-        "REQ-1"
+        "REQ-5"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Add multi-year (all years to current year) expense total with auto-updating UI",
+  "projectName": "Expense Tracker",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

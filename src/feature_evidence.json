@@ -2,11 +2,33 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-react-query-hook-and-query-key-to-fetch-and-cache-the-new-backend-multi-year-total-following-the-same-patterns-used-by-usemonthlytotaltonow-and-useyearlytotaltonow-anonymous-actor-enabled-gating-on-actor-readiness-no-retries",
-      "featureTitle": "Add a new React Query hook and query key to fetch and cache the new backend multi-year total, following the same patterns used by useMonthlyTotalToNow and useYearlyTotalToNow (anonymous actor, enabled gating on actor readiness, no retries).",
+      "featureId": "feature-add-a-details-button-below-the-monthly-summary-section-that-when-clicked-expands-inline-to-display-a-table-of-all-daily-expenses-for-the-current-month-to-date",
+      "featureTitle": "Add a 'Details' button below the monthly summary section that, when clicked, expands inline to display a table of all daily expenses for the current month to date",
       "files": [
+        "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+        "frontend/src/components/expenses/ExpenseDetailsTable.tsx",
         "frontend/src/features/expenses/queryKeys.ts",
-        "frontend/src/features/expenses/useAllYearsTotalToNow.ts"
+        "frontend/src/features/expenses/useExpensesInRange.ts",
+        "frontend/src/pages/DailyExpensesPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-details-button-below-the-yearly-summary-section-that-when-clicked-expands-inline-to-display-a-table-of-all-daily-expenses-for-the-current-year-to-date",
+      "featureTitle": "Add a 'Details' button below the yearly summary section that, when clicked, expands inline to display a table of all daily expenses for the current year to date",
+      "files": [
+        "frontend/src/pages/DailyExpensesPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -22,9 +44,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-daily-expenses-page-totals-ui-to-display-the-multi-year-total-as-a-single-additional-total-card-with-an-english-label-and-show-a-loading-spinner-while-it-is-fetching-consistent-with-the-existing-daily-month-to-date-year-to-date-cards",
-      "featureTitle": "Update the Daily Expenses page totals UI to display the multi-year total as a single additional total card with an English label, and show a loading spinner while it is fetching, consistent with the existing daily/month-to-date/year-to-date cards.",
+      "featureId": "feature-add-a-details-button-below-the-multi-yearly-summary-section-that-when-clicked-expands-inline-to-display-a-table-of-all-daily-expenses-across-all-years",
+      "featureTitle": "Add a 'Details' button below the multi-yearly summary section that, when clicked, expands inline to display a table of all daily expenses across all years",
       "files": [
+        "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+        "frontend/src/features/expenses/queryKeys.ts",
+        "frontend/src/features/expenses/useAllExpenses.ts",
         "frontend/src/pages/DailyExpensesPage.tsx"
       ],
       "components": [
@@ -41,12 +66,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-multi-year-total-auto-updates-after-creating-updating-or-deleting-an-expense-by-invalidating-the-multi-year-total-query-in-the-existing-expense-mutation-hooks",
-      "featureTitle": "Ensure the multi-year total auto-updates after creating, updating, or deleting an expense by invalidating the multi-year total query in the existing expense mutation hooks.",
+      "featureId": "feature-ensure-each-time-period-s-details-section-can-be-expanded-and-collapsed-independently-without-affecting-the-other-sections",
+      "featureTitle": "Ensure each time period's details section can be expanded and collapsed independently without affecting the other sections",
       "files": [
-        "frontend/src/features/expenses/useCreateExpense.ts",
-        "frontend/src/features/expenses/useDeleteExpense.ts",
-        "frontend/src/features/expenses/useUpdateExpense.ts"
+        "frontend/src/components/expenses/ExpandableDetailsSection.tsx"
       ],
       "components": [
         "authorization@4.0.0",

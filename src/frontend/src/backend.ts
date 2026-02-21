@@ -128,6 +128,10 @@ export interface backendInterface {
     getCallerUserRole(): Promise<UserRole>;
     getDailyTotal(date: Time): Promise<bigint>;
     /**
+     * / Returns all expenses within a specified date range (inclusive).
+     */
+    getExpensesInRange(startDate: Time, endDate: Time): Promise<Array<Expense>>;
+    /**
      * / Returns the total expense amount for the current month up to now.
      */
     getMonthlyTotalToNow(): Promise<bigint>;
@@ -266,6 +270,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.getDailyTotal(arg0);
+            return result;
+        }
+    }
+    async getExpensesInRange(arg0: Time, arg1: Time): Promise<Array<Expense>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getExpensesInRange(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getExpensesInRange(arg0, arg1);
             return result;
         }
     }

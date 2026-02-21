@@ -42,6 +42,7 @@ export const idlService = IDL.Service({
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getDailyTotal' : IDL.Func([Time], [IDL.Nat], ['query']),
+  'getExpensesInRange' : IDL.Func([Time, Time], [IDL.Vec(Expense)], ['query']),
   'getMonthlyTotalToNow' : IDL.Func([], [IDL.Nat], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -91,6 +92,11 @@ export const idlFactory = ({ IDL }) => {
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getDailyTotal' : IDL.Func([Time], [IDL.Nat], ['query']),
+    'getExpensesInRange' : IDL.Func(
+        [Time, Time],
+        [IDL.Vec(Expense)],
+        ['query'],
+      ),
     'getMonthlyTotalToNow' : IDL.Func([], [IDL.Nat], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],

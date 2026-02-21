@@ -1,70 +1,107 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Multi-year (all-years-to-date) expense total: React Query hook + UI card + auto-refresh",
+  "title": "Add expandable details tables to time period summaries",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Add a React Query query key and hook to fetch/cache the backend multi-year total using the anonymous actor with the same gating and retry behavior as existing total hooks.",
+      "id": "REQ-1",
+      "summary": "Add expandable details table below monthly summary showing all expenses for the current month",
       "acceptanceCriteria": [
-        "A new query key is added to frontend/src/features/expenses/queryKeys.ts for the multi-year total.",
-        "A new hook is added alongside existing totals hooks (e.g., in frontend/src/features/expenses/) that calls the new backend query method and returns {data,isLoading,...} consistent with existing totals hooks.",
-        "The hook caches results via React Query and supports refetch/invalidation like other totals."
+        "A 'Details' button appears below the monthly total display",
+        "Clicking the button expands a table inline showing all expenses for the month",
+        "The table displays date, category, amount, and description columns for each expense",
+        "The button toggles between expand and collapse states"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/expenses/queryKeys.ts",
-          "operation": "modify",
-          "description": "Add a new expenseQueryKeys helper for the multi-year total (e.g., allYearsTotalToNow) to match existing monthlyTotalToNow/yearlyTotalToNow key patterns."
+          "path": "frontend/src/features/expenses/useExpensesInRange.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches expenses within a date range using the backend getExpensesInRange method. Accept startDate and endDate parameters (as Date objects), convert them to nanosecond timestamps using dateToNanoseconds from date.ts, and return the filtered expense array. Enable the query only when the actor is available."
         },
         {
-          "path": "frontend/src/features/expenses/useAllYearsTotalToNow.ts",
+          "path": "frontend/src/components/expenses/ExpenseDetailsTable.tsx",
           "operation": "create",
-          "description": "Create a new React Query hook (pattern-matched to useMonthlyTotalToNow/useYearlyTotalToNow) that uses useAnonymousActor readiness gating and calls actor.getAllYearsTotalToNow(), with retry disabled and isLoading combining actorFetching + query.isLoading."
+          "description": "Create a reusable table component that displays expense details with columns for date, category (expenseType), amount, and submitter name (submitterName). Format dates for display, format amounts as currency, and handle empty states with appropriate messaging. Use shadcn/ui Table components for styling consistency."
+        },
+        {
+          "path": "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+          "operation": "create",
+          "description": "Create a collapsible section component with a 'Details' button that toggles visibility of ExpenseDetailsTable. Manage local expand/collapse state using useState. Accept startDate, endDate, and a label prop. Use useExpensesInRange hook to fetch data when expanded. Display loading state while fetching and show ExpenseDetailsTable when data is available."
+        },
+        {
+          "path": "frontend/src/pages/DailyExpensesPage.tsx",
+          "operation": "modify",
+          "description": "Add ExpandableDetailsSection components below each of the three time period total displays (monthly, yearly, and multi-yearly). For monthly details, pass the first day of the current month and today as the date range. Ensure each section maintains independent expand/collapse state and integrates seamlessly with the existing page layout."
+        },
+        {
+          "path": "frontend/src/features/expenses/queryKeys.ts",
+          "operation": "modify",
+          "description": "Add a query key factory function for expenses in a date range that accepts startDate and endDate timestamps to support the new useExpensesInRange hook with proper cache management."
         }
       ]
     },
     {
-      "id": "REQ-3",
-      "summary": "Show the multi-year total on Daily Expenses as an additional responsive total card with English label and existing loading spinner pattern.",
+      "id": "REQ-2",
+      "summary": "Add expandable details table below yearly summary showing all expenses for the current year",
       "acceptanceCriteria": [
-        "DailyExpensesPage renders an additional total card for the multi-year total using the same formatting as other totals ($ with cents from bigint/100).",
-        "The card label is in English and clearly indicates it is the multi-year/till-date total (e.g., “Multi-year Total (to date)”).",
-        "When the multi-year total is loading, the card shows the same loading indicator pattern used by the other total cards.",
-        "Layout remains responsive (works on mobile and desktop) when adding the extra total card."
+        "A 'Details' button appears below the yearly total display",
+        "Clicking the button expands a table inline showing all expenses for the year",
+        "The table displays date, category, amount, and description columns for each expense",
+        "The button toggles between expand and collapse states"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/DailyExpensesPage.tsx",
           "operation": "modify",
-          "description": "Import and use the new useAllYearsTotalToNow hook; compute a displayAllYearsTotal fallback (BigInt(0)) and render a new total Card in the totals grid with an English label (e.g., \"Multi-year Total (to date):\") and the same Loader2 spinner while loading; update the grid column classes to remain responsive with the extra card (e.g., md grid supports 4 cards)."
+          "description": "Add ExpandableDetailsSection below the yearly total display. Pass January 1 of the current year and today as the date range parameters. The component will use the shared ExpenseDetailsTable and useExpensesInRange hook created in REQ-1."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add expandable details table below multi-yearly summary showing all expenses across all years",
+      "acceptanceCriteria": [
+        "A 'Details' button appears below the multi-yearly total display",
+        "Clicking the button expands a table inline showing all expenses across all time",
+        "The table displays date, category, amount, and description columns for each expense",
+        "The button toggles between expand and collapse states"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/expenses/useAllExpenses.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that fetches all expenses using the backend getAllExpenses method. Use the anonymous actor for consistency with other read-only queries. Enable the query only when the actor is available. Add query key from queryKeys.ts for cache management."
+        },
+        {
+          "path": "frontend/src/pages/DailyExpensesPage.tsx",
+          "operation": "modify",
+          "description": "Add ExpandableDetailsSection below the multi-yearly total display. Instead of using date range parameters, configure this section to use the useAllExpenses hook to display all expenses across all time. Adjust ExpandableDetailsSection to optionally accept expenses directly instead of requiring date range when displaying all-time data."
+        },
+        {
+          "path": "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
+          "operation": "modify",
+          "description": "Extend the component to support two modes: date-range mode (using useExpensesInRange) and all-expenses mode (accepting expenses prop directly). When expenses prop is provided, skip the date range query and use the provided data instead."
+        },
+        {
+          "path": "frontend/src/features/expenses/queryKeys.ts",
+          "operation": "modify",
+          "description": "Add a query key for all expenses to support the useAllExpenses hook and maintain consistent cache management across the application."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Auto-update the multi-year total after expense create/update/delete by invalidating the new React Query key from existing mutation hooks.",
+      "summary": "Ensure independent expand/collapse state for each time period's details section",
       "acceptanceCriteria": [
-        "frontend/src/features/expenses/useCreateExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
-        "frontend/src/features/expenses/useUpdateExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
-        "frontend/src/features/expenses/useDeleteExpense.ts invalidates the multi-year total query on success (in addition to existing invalidations).",
-        "After any create/update/delete, the displayed multi-year total refreshes without a page reload."
+        "Expanding monthly details does not affect yearly or multi-yearly sections",
+        "Each section maintains its own expand/collapse state",
+        "Multiple sections can be expanded simultaneously"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/features/expenses/useCreateExpense.ts",
+          "path": "frontend/src/components/expenses/ExpandableDetailsSection.tsx",
           "operation": "modify",
-          "description": "On mutation success, invalidate the new multi-year total query key (e.g., expenseQueryKeys.allYearsTotalToNow()) alongside the existing daily/monthly/yearly invalidations so the UI refreshes automatically."
-        },
-        {
-          "path": "frontend/src/features/expenses/useUpdateExpense.ts",
-          "operation": "modify",
-          "description": "On mutation success, invalidate the new multi-year total query key (e.g., expenseQueryKeys.allYearsTotalToNow()) alongside the existing daily/monthly/yearly invalidations so the UI refreshes automatically."
-        },
-        {
-          "path": "frontend/src/features/expenses/useDeleteExpense.ts",
-          "operation": "modify",
-          "description": "On mutation success, invalidate the new multi-year total query key (e.g., expenseQueryKeys.allYearsTotalToNow()) alongside the existing daily/monthly/yearly invalidations so the UI refreshes automatically."
+          "description": "Verify that each ExpandableDetailsSection instance uses its own local useState for expand/collapse state, ensuring complete independence. Each button click should only affect its own section's visibility without any shared state or side effects that could impact other sections."
         }
       ]
     }

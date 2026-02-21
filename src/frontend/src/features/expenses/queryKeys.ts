@@ -7,4 +7,6 @@ export const expenseQueryKeys = {
   monthlyTotalToNow: () => ['monthlyTotalToNow'],
   yearlyTotalToNow: () => ['yearlyTotalToNow'],
   allYearsTotalToNow: () => ['allYearsTotalToNow'],
+  expensesInRange: (startDate: bigint, endDate: bigint) => ['expensesInRange', startDate.toString(), endDate.toString()],
+  allExpenses: () => ['allExpenses'],
 };

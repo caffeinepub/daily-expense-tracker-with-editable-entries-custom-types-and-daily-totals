@@ -45,6 +45,10 @@ export interface _SERVICE {
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getDailyTotal' : ActorMethod<[Time], bigint>,
   /**
+   * / Returns all expenses within a specified date range (inclusive).
+   */
+  'getExpensesInRange' : ActorMethod<[Time, Time], Array<Expense>>,
+  /**
    * / Returns the total expense amount for the current month up to now.
    */
   'getMonthlyTotalToNow' : ActorMethod<[], bigint>,

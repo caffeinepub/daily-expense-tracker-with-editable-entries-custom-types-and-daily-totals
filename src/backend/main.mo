@@ -1,7 +1,7 @@
 import Map "mo:core/Map";
 import Nat "mo:core/Nat";
-import Array "mo:core/Array";
 import Time "mo:core/Time";
+import Array "mo:core/Array";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
@@ -92,9 +92,12 @@ actor {
   var expenseIdCounter = 0;
   let expenses = Map.empty<Nat, Expense.Expense>();
 
-  // Public expense functions - no authorization required per implementation plan
-  // Anonymous visitors can create, view, update, and delete expenses
+  // Public expense functions - require user authentication
   public shared ({ caller }) func createExpense(input : Expense.ExpenseInput) : async Expense.Expense {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create expenses");
+    };
+
     let expenseId = expenseIdCounter;
     expenseIdCounter += 1;
 
@@ -104,10 +107,17 @@ actor {
   };
 
   public query ({ caller }) func getAllExpenses() : async [Expense.Expense] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view expenses");
+    };
     expenses.values().toArray();
   };
 
   public shared ({ caller }) func updateExpense(id : Expense.ExpenseId, input : Expense.ExpenseInput) : async Expense.Expense {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can update expenses");
+    };
+
     switch (expenses.get(id)) {
       case (null) { Runtime.trap("Expense not found") };
       case (?existingExpense) {
@@ -119,6 +129,10 @@ actor {
   };
 
   public shared ({ caller }) func deleteExpense(id : Expense.ExpenseId) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can delete expenses");
+    };
+
     switch (expenses.get(id)) {
       case (null) { Runtime.trap("Expense not found") };
       case (?_existingExpense) {
@@ -128,6 +142,10 @@ actor {
   };
 
   public query ({ caller }) func getDailyTotal(date : Time.Time) : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view expense totals");
+    };
+
     let nanosecondsPerDay : Int = (24 : Int) * (60 : Int) * (60 : Int) * (1_000_000_000 : Int);
 
     let dayStart = date / nanosecondsPerDay * nanosecondsPerDay;
@@ -142,8 +160,25 @@ actor {
     expensesForDay.foldLeft(0, func(acc, expense) { acc + expense.amount });
   };
 
+  /// Returns all expenses within a specified date range (inclusive).
+  public query ({ caller }) func getExpensesInRange(startDate : Time.Time, endDate : Time.Time) : async [Expense.Expense] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view expenses");
+    };
+
+    expenses.values().toArray().filter(
+      func(expense) {
+        expense.date >= startDate and expense.date <= endDate
+      }
+    );
+  };
+
   /// Returns the total expense amount for the current month up to now.
   public query ({ caller }) func getMonthlyTotalToNow() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view expense totals");
+    };
+
     let currentTimeNs = Time.now();
     let nanosecondsPerDay : Int = (24 : Int) * (60 : Int) * (60 : Int) * (1_000_000_000 : Int);
 
@@ -169,6 +204,10 @@ actor {
 
   /// Returns the total expense amount from the earliest recorded expense year up to the current year.
   public query ({ caller }) func getAllYearsTotalToNow() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view expense totals");
+    };
+
     let expensesArray = expenses.values().toArray();
     let total = expensesArray.foldLeft(0, func(acc, expense) { acc + expense.amount });
     total;
@@ -176,6 +215,10 @@ actor {
 
   /// Returns the total expense amount for the current year up to now.
   public query ({ caller }) func getYearlyTotalToNow() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view expense totals");
+    };
+
     let currentTimeNs = Time.now();
     let nanosecondsPerDay : Int = (24 : Int) * (60 : Int) * (60 : Int) * (1_000_000_000 : Int);
     let nanosecondsPerYear : Int = (365 : Int) * nanosecondsPerDay;
